@@ -1,0 +1,391 @@
+# import User, Institution,Course, ChallengeMessageSubscriptionPayload, ChallengeSubscriptionPayload, QuestionSubscriptionPayload, ChallengeMessageSubscriptionWhereInput, ChallengeMessageSubscriptionPayload UserWhereUniqueInput, ChallengeMessageWhereInput, CourseOrderByInput, ChallengeMessageOrderByInput, ResponseImageWhereInput, CourseWhereInput, AnswerWhereInput, ChallengeWhereInput, ResponseImageOrderByInput,  QuestionChoiceWhereInput, PanelWhereInput,  TestWhereInput, DepartmentWhereInput, UserOrderByInput, UserWhereInput, InstitutionWhereInput, InstitutionOrderByInput, DepartmentOrderByInput, TestOrderByInput, PanelOrderByInput, QuestionWhereInput, QuestionOrderByInput, QuestionChoice, ChallengeOrderByInput, AnswerOrderByInput, Test, Question, QuestionChoice, Challenge, Answer,Sequence from "./generated/prisma.graphql"
+
+directive @isAuthenticated on QUERY | FIELD_DEFINITION  | MUTATION
+directive @hasRole(roles: [String]) on QUERY | FIELD_DEFINITION  | MUTATION
+
+
+type Query {
+
+  articleRecommendations(transLang: String!, link: String!): ArticleRecommendations!
+
+  institutions(filter: String, where: InstitutionWhereInput, skip: Int, first: Int, orderBy: InstitutionOrderByInput): InstitutionSearch! @isAuthenticated
+
+  institution(id: ID!): Institution! @isAuthenticated
+
+  courses(filter: String, where: CourseWhereInput, skip: Int, first: Int, orderBy: CourseOrderByInput): CourseSearch! @isAuthenticated
+
+  course(id: ID!): Course! @isAuthenticated
+
+  courseDashboard(courseId: ID!): CourseDashboard! @isAuthenticated
+
+  courseDashboard1(courseId: ID!): CourseDashboard! @isAuthenticated
+
+  testList(testId: ID!): CourseTest! @isAuthenticated
+
+  users(filter: String, where: UserWhereInput, skip: Int, first: Int, orderBy: UserOrderByInput): UserSearch! @isAuthenticated
+
+  user(id: ID!): User! @isAuthenticated
+
+  tests(filter: String, where: TestWhereInput, skip: Int, first: Int, orderBy: TestOrderByInput): TestSearch! @isAuthenticated
+
+  test(id: ID!): Test! @isAuthenticated
+
+  testStats(testId: ID!): PercentCorrect! @isAuthenticated
+
+  userAnsweredStats(testId:ID!): PercentCorrect! @isAuthenticated
+
+  userQuestionStats(testId:ID!): PercentCorrectUserQuestions! @isAuthenticated
+
+  userTestStats(testId: ID!, courseId: ID!): [PercentCorrect!] @isAuthenticated
+
+  testQuestionStats(testId: ID!): [PercentQuestionCorrect!]! @isAuthenticated
+
+  testPanelStats(testId: ID!): [PercentPanelCorrect!]! @isAuthenticated
+
+  responseImages(filter: String, where: ResponseImageWhereInput,  skip: Int, first: Int, orderBy: ResponseImageOrderByInput): ResponseImageSearch! @isAuthenticated
+
+  panels(filter: String, where: PanelWhereInput, skip: Int, first: Int, orderBy: PanelOrderByInput): PanelSearch! @isAuthenticated
+
+  questions(filter: String, where: QuestionWhereInput, skip: Int, first: Int, orderBy: QuestionOrderByInput): QuestionSearch! @isAuthenticated
+
+  question(id: ID!): Question! @isAuthenticated
+
+  userQuestions(testId:ID!): [Question!] @isAuthenticated
+
+  userQuestions1(testId:ID!): PercentCorrectUserQuestions1! @isAuthenticated
+
+  userAnswers(testId:ID!): [Answer!] @isAuthenticated
+
+  userAnswers1(testId:ID!): PercentCorrect1! @isAuthenticated
+
+  questionsAnswered(testId: String!): AnswerStats! @isAuthenticated
+
+  questionStats(questionId: String): PercentCorrect! @isAuthenticated
+
+  questionchoices(filter: String, where: QuestionChoiceWhereInput, skip: Int, first: Int, orderBy: QuestionChoiceOrderByInput): QuestionChoiceSearch! @isAuthenticated
+
+  challenges(filter: String, where: ChallengeWhereInput, skip: Int, first: Int, orderBy: ChallengeOrderByInput): ChallengeSearch! @isAuthenticated
+
+  challengeMessages(filter: String, where: ChallengeMessageWhereInput, skip: Int, first: Int, orderBy: ChallengeMessageOrderByInput): ChallengeMessageSearch! @isAuthenticated
+
+  challenge(id: ID!): Challenge! @isAuthenticated
+
+  answers(filter: String, where: AnswerWhereInput, skip: Int, first: Int, orderBy: AnswerOrderByInput): AnswerSearch! @isAuthenticated
+
+  answer(id: ID!): Answer! @isAuthenticated
+
+  sequences(filter: String): [Sequence!]! @isAuthenticated
+
+  me: User
+}
+
+type Mutation {
+
+  signup(email: String!, password: String!, firstName: String!,lastName: String!, role: String): signUpPayload
+
+  signupAdmin(email: String!, password: String!, firstName: String!,lastName: String!, title: String,  department: String,  address1: String,  address2: String,  city: String, state: String, zip: String, phone: String, role: String, institutionId: ID): signUpPayload
+
+  signupTeacher(email: String!, password: String!, firstName: String!,lastName: String!, department: String,  address1: String,  address2: String,  city: String, state: String, zip: String, phone: String, role: String, institutionId: ID): signUpPayload
+
+  login(email: String!, password: String!): AuthPayload
+
+  mobileLogin(email: String!, password: String!, pushToken: String): AuthPayload
+
+  logout: signUpPayload
+
+  newPasswordRequest(email: String!): signUpPayload
+
+  resetPassword(email: String!, resetToken: String!, resetPassword: String!): signUpPayload
+
+  confirmEmail(email: String!, confirmationToken: String!): signUpPayload
+
+  sendInvite(emails: String, courseId: ID!): signUpPayload
+
+  addInstitution(name: String!, address1: String,  address2: String,  city: String,  state: String,  zip: String,  phone: String,  email: String, type: String, contactIds: ID, teacherIds: [ID], studentIds: [ID], courseIds: [ID]): Institution ! @hasRole(roles: ["QUANDRIA"])
+
+  updateInstitution(id: ID!, name: String, address1: String,  address2: String,  city: String,  state: String,  zip: String,  phone: String,  email: String, type: String, deleted: Boolean, contactIds: [ID], teacherIds: [ID], studentIds: [ID], adminIds: [ID] courseIds: [ID]): Institution! @hasRole(roles: ["QUANDRIA","ADMIN"])
+
+  deleteInstitution(id: ID!): Institution! @hasRole(roles: ["QUANDRIA"])
+
+  addCourse(name: String!, department1: String, courseNumber: String, time: String, image: String, deleted: Boolean, institutionId: ID!): Course! @hasRole(roles: ["TEACHER","ADMIN"])
+
+  updateCourse(id: ID!, name: String, department1: String, courseNumber: String, time: String, image: String, deleted: Boolean, teacherIds: [ID], studentIds: [ID]): Course! @hasRole(roles: ["TEACHER","ADMIN"])
+
+  deleteCourse(id: ID!): Course! @hasRole(roles: ["TEACHER","ADMIN"])
+
+  addTest(subject: String!, testType: String!, testNumber: String, testDate: DateTime, deleted: Boolean, courseId: ID!): Test! @hasRole(roles: ["TEACHER","ADMIN"])
+
+  updateTest(id: ID!, subject: String, testNumber: String, testDate: DateTime, testType: String, published: Boolean, publishDate: DateTime, release: Boolean, releaseDate: DateTime, startTime: String, endTime: String, endDate: DateTime, deleted: Boolean): Test! @hasRole(roles: ["TEACHER","ADMIN"])
+
+  deleteTest(id: ID!): Test! @hasRole(roles: ["TEACHER","ADMIN"])
+
+  addPanel(link: String!, testId: ID!): Panel! @hasRole(roles: ["TEACHER","ADMIN"])
+
+  addPanels(uploadUrls: [String!]!, testId: ID!): JoinCourse! @hasRole(roles: ["TEACHER","ADMIN"])
+
+  addLabeledPhoto(link: String!, testId: ID!, label: String!): Panel! @hasRole(roles: ["STUDENT","TEACHER","ADMIN"])
+
+  deletePanel(id: ID!): Panel! @hasRole(roles: ["TEACHER","ADMIN"])
+
+  link: String!, type: String!
+
+  addResponseImage(link: String!, type: String!): ResponseImage! @hasRole(roles: ["QUANDRIA"])
+
+  updateResponseImage(id: ID!, link: String, type: String): ResponseImage! @hasRole(roles: ["QUANDRIA"])
+
+  deleteResponseImage(id: ID!): ResponseImage! @hasRole(roles: ["QUANDRIA"])
+
+  addQuestion(question: String!, testId: ID!, panelId: ID!, sentToId: ID, correctResponseImageId: ID, incorrectResponseImageId: ID): Question! @hasRole(roles: ["TEACHER","STUDENT","ADMIN"])
+
+  updateQuestion(id: ID!, question: String, choice1: String, choice2: String, choice3: String, choice4: String, choiceCorrect1: Boolean, choiceCorrect2: Boolean, choiceCorrect3: Boolean, choiceCorrect4: Boolean, choice1Id: ID, choice2Id: ID, choice3Id: ID, choice4Id: ID, correctResponseImageId: ID, incorrectResponseImageId: ID): Question! @hasRole(roles: ["STUDENT"])
+
+  notificationSent(id: ID!, sentDate: DateTime!, expirationTime: DateTime!): Question!
+
+  deleteQuestion(id: ID!): Question! @hasRole(roles: ["TEACHER","STUDENT","ADMIN"])
+
+  addQuestionChoice(choice: String!, correct: Boolean, questionId: ID!): QuestionChoice! @hasRole(roles: ["STUDENT"])
+
+  updateQuestionChoice(id: ID!, choice: String, correct: Boolean): QuestionChoice! @hasRole(roles: ["STUDENT"])
+
+  deleteQuestionChoice(id: ID!): QuestionChoice! @hasRole(roles: ["STUDENT"])
+
+  createQuestion(question: String!, choice1: String!, choice2: String!, choice3: String!, choice4: String!, choiceCorrect1: Boolean!, choiceCorrect2: Boolean!, choiceCorrect3: Boolean!, choiceCorrect4: Boolean!, testId: ID!, panelId: ID!, sentToId: ID, correctResponseImageId: ID, incorrectResponseImageId: ID): Question! @hasRole(roles: ["TEACHER","STUDENT","ADMIN"])
+
+  createShortAnswerQuestion(question: String!, correctShortAnswer: String!, testId: ID!, panelId: ID!, sentToId: ID, correctResponseImageId: ID, incorrectResponseImageId: ID): Question! @hasRole(roles: ["TEACHER","STUDENT","ADMIN"])
+
+  addChallenge(challenge: String!, answerId: ID!): Challenge! @hasRole(roles: ["TEACHER","STUDENT","ADMIN"])
+
+  updateChallenge(id: ID!, challenge: String): Challenge! @hasRole(roles: ["TEACHER","STUDENT","ADMIN"])
+
+  deleteChallenge(id: ID!): Challenge! @hasRole(roles: ["TEACHER","STUDENT","ADMIN"])
+
+  addChallengeMessage(challengeMessage: String!, challengeId: ID! ): ChallengeMessage! @hasRole(roles: ["TEACHER","STUDENT","ADMIN"])
+
+  addAnswer(questionId: ID!, answerChoiceId: ID!): Answer! @hasRole(roles: ["STUDENT"])
+
+  addShortAnswer(questionId: ID!, shortAnswerText: String!): Answer! @hasRole(roles: ["STUDENT"])
+
+  deleteAnswer(id: ID!): Answer! @hasRole(roles: ["STUDENT"])
+
+  addSequence(testId: ID!, studentIds: [ID!]!, panelIds: [ID!]!): Sequence!
+
+  updateSequence(id: ID!, studentIds: [ID], usedStudentIds: [ID], panelIds: [ID], usedPanelIds: [ID]): Sequence!
+
+  deleteSequence(id: ID!): Sequence!
+
+  publishTest(testId: ID!, startTime: String!, endTime: String!, endDate: DateTime!, panelId: ID!, question: String!, choice1: String!, choiceCorrect1: Boolean!, choice2: String!, choiceCorrect2: Boolean!, choice3: String!, choiceCorrect3: Boolean!, choice4: String!, choiceCorrect4: Boolean!): Test!
+
+  editPublishTest(testId: ID!, startTime: String, endTime: String, endDate: DateTime, published:Boolean): Test!
+
+  sendQuestion(testId: ID!, questionId: ID!): Question!
+
+  joinCourse(inviteId: ID!,courseId: ID!): JoinCourse
+
+  updateUser(email: String, salutation: String, firstName: String, lastName: String, title: String,  department: String,  address1: String,  address2: String,  city: String, state: String, zip: String, phone: String, role: String, pushToken: String, adminInstitutions: [ID], teacherInstitutions: [ID], studentInstitutions: [ID], studentCourseIds:[ID], studentIds:[String], teacherIds: [String], online: Boolean, touchIdEnabled: Boolean): User!
+
+  updatePersonnel(userId: ID!, email: String, salutation: String, firstName: String, lastName: String, title: String,  department: String,  address1: String,  address2: String,  city: String, state: String, zip: String, phone: String, role: String, pushToken: String, adminInstitutions: [ID], teacherInstitutions: [ID], studentInstitutions: [ID], studentCourseIds:[ID], studentIds:[String], teacherIds: [String], online: Boolean, touchIdEnabled: Boolean): User!
+
+
+}
+
+type Subscription {
+
+  challengeMsg(challengeId: ID!): ChallengeMessageSubscriptionPayload
+
+  newPanel(testId: ID!): PercentPanelCorrect
+
+  newQuestion(testId: ID!): QuestionSubscriptionPayload
+
+  newChallenge(testId: ID!): ChallengeSubscriptionPayload
+
+  newAnswer(testId: ID!): AnswerSubscriptionPayload
+
+  panelCount(testId: ID!): Count
+
+  questionCount(testId: ID!): Count
+
+  challengeCount(testId: ID!): Count
+
+  answerCount(testId: ID!): PercentCorrect
+}
+
+type ArticleRecommendation {
+  link: String!
+  title: String!
+  art_id: String!
+}
+
+type ArticleRecommendations {
+  link: String!
+  recommendations: [ArticleRecommendation!]!
+}
+
+type UserSearch {
+  users: [User!]!
+  count: Int!
+}
+
+type CourseSearch {
+  courses: [Course!]!
+  count: Int!
+}
+
+type InstitutionSearch {
+  institutions: [Institution!]!
+  count: Int!
+}
+
+type TestSearch {
+  tests: [Test!]!
+  count: Int!
+}
+
+type PanelSearch {
+  panels: [Panel!]!
+  count: Int!
+}
+
+type ResponseImageSearch {
+  panels: [ResponseImage!]!
+  count: Int!
+}
+
+type QuestionSearch {
+  questions: [Question!]!
+  count: Int!
+}
+
+type AnswerStats {
+  answered: Int!
+  answeredCorrect: Int!
+  answeredPercent: Float!
+  asked: Int!
+  askedAnswered: Int!
+  askedAnsweredCorrect: Int!
+  askedAnsweredPercent: Float!
+}
+
+type PercentCorrect {
+  id: ID!
+  name: String!
+  total: Int!
+  totalCorrect: Int!
+  percentCorrect: Float!
+}
+
+type PercentCorrect1 {
+  answers: [Answer!]
+  total: Int!
+  totalCorrect: Int!
+  percentCorrect: Float!
+}
+
+type PercentCorrectUserQuestions {
+  totalQuestions: Int!
+  answers: Int!
+  totalCorrect: Int!
+  percentCorrect: Float!
+}
+
+type PercentCorrectUserQuestions1 {
+  questions: [Question!]
+  totalQuestions: Int!
+  answers: Int!
+  totalCorrect: Int!
+  percentCorrect: Float!
+}
+
+type PercentPanelCorrect {
+  id: ID!
+  question: String
+  panelLink: String!
+  total: Int!
+  totalCorrect: Int!
+  percentCorrect: Float!
+}
+
+type PercentQuestionCorrect {
+  question: String!
+  total: Int!
+  totalCorrect: Int!
+  percentCorrect: Float!
+}
+
+type QuestionChoiceSearch {
+  questionchoices: [QuestionChoice!]!
+  count: Int!
+}
+
+type ChallengeSearch {
+  challenges: [Challenge!]!
+  count: Int!
+}
+
+type ChallengeMessageSearch {
+  challengeMessages: [ChallengeMessage!]!
+  count: Int!
+}
+
+type AnswerSearch {
+  answers: [Answer!]!
+  count: Int!
+}
+
+type AuthPayload {
+  token: String
+  user: User
+  authMsg: String
+}
+
+type signUpPayload {
+  authMsg: String
+  user: User
+}
+
+type SentQuestion {
+  sentTo: User!
+  sentPanel: Panel!
+}
+
+type JoinCourse {
+  authMsg: String!
+}
+
+type Count {
+  count: Int!
+}
+
+type StatsCount {
+  count: Int!
+  panelPercents: [PercentPanelCorrect!]!
+}
+
+type CourseTest {
+  id: ID!
+  deleted: Boolean
+  subject: String!
+  testDate: DateTime!
+  testNumber: String!
+  testType: String
+  release: Boolean
+  published: Boolean
+  releaseDate: DateTime
+  publishDate: DateTime
+  questionsCount: Int!
+  panelsCount: Int!
+  answersCount: Int!
+  accuracy: Float!
+  challengeCount: Int!
+}
+
+type CourseDashboard {
+    id: ID!
+    deleted: Boolean
+    name: String!
+    time: DateTime!
+    image: String
+    courseNumber: String!
+    studentCount: Int!
+    testCount: Int!
+    courseTestList: [CourseTest!]
+}
