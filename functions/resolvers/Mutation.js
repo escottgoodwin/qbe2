@@ -1497,6 +1497,36 @@ async function updateQuestion(parent, args, ctx, info) {
   )
 }
 
+async function updateShortQuestion(parent, args, ctx, info) {
+  const userId = await getUserId(ctx)
+  const updateDate = new Date()
+  const questionExists = await ctx.db.exists.Question({
+    id: args.id,
+    addedBy: { id: userId },
+  })
+  if (!questionExists) {
+    throw new Error(`Unauthorized, you are not the author of this question`)
+  }
+
+  return await ctx.db.mutation.updateQuestion(
+    {
+      data: {
+        question: args.question,
+        correctShortAnswer: args.correctShortAnswer,
+        updateDate,
+        updatedBy: {
+          connect: { id: userId },
+        },
+      },
+      where: {
+        id: args.id
+        }
+    },
+    info
+  )
+}
+
+
 async function notificationSent(parent, args, ctx, info) {
 
   return await ctx.db.mutation.updateQuestion(
@@ -2121,6 +2151,7 @@ module.exports = {
   deleteResponseImage,
   addQuestion,
   updateQuestion,
+  updateShortQuestion,
   notificationSent,
   deleteQuestion,
   createQuestion,
