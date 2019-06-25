@@ -44,6 +44,57 @@ function shuffleIds(itemIds) {
   }
 }
 
+async function sendInvite1(email) {
+
+    const invite = await ctx.db.mutation.createCourseInvite(
+      {
+        data: {
+          addedDate,
+          addedBy:
+          {
+            connect: {
+              id: userId
+            }
+          },
+          inviteSentTo: {
+            connect: {
+              email: email
+            }
+          },
+          course: {
+            connect: {
+              id: args.courseId
+            }
+          },
+        },
+      },
+      `{ inviteSentTo { firstName lastName email role } course { name courseNumber }  }`
+    )
+
+    const htmlEmail =
+      `<html>
+      <head>
+
+      </head>
+      <body>
+        <p>Hi ${invite.inviteSentTo.firstName} ${invite.inviteSentTo.lastName},</p>
+        <p>You have been invited to join course ${invite.course.name} ${invite.course.courseNumber}
+        <p><a href="${ hosturl }/login">Login</a> and accept invitation to join the course.</p>
+
+      </body>
+      </html>`
+
+    const msg = {
+      to: email,
+      subject: `Join ${invite.course.name} ${invite.course.courseNumber}`,
+      text: `Login and accept invitation to join the course. ${ hosturl }/login`,
+      html: htmlEmail,
+    };
+
+    sendGridSend(msg)
+
+  }
+
 function sendGridSend(msg){
   const sgMail = require('@sendgrid/mail');
 
@@ -448,60 +499,9 @@ async function sendInvite(parent, args, ctx, info) {
 
   if (courseTeachers.includes(userId)){
 
-  async function sendInvite(email) {
-
-      const invite = await ctx.db.mutation.createCourseInvite(
-        {
-          data: {
-            addedDate,
-            addedBy:
-            {
-              connect: {
-                id: userId
-              }
-            },
-            inviteSentTo: {
-              connect: {
-                email: email
-              }
-            },
-            course: {
-              connect: {
-                id: args.courseId
-              }
-            },
-          },
-        },
-        `{ inviteSentTo { firstName lastName email role } course { name courseNumber }  }`
-      )
-
-      const htmlEmail =
-        `<html>
-        <head>
-
-        </head>
-        <body>
-          <p>Hi ${invite.inviteSentTo.firstName} ${invite.inviteSentTo.lastName},</p>
-          <p>You have been invited to join course ${invite.course.name} ${invite.course.courseNumber}
-          <p><a href="${ hosturl }/login">Login</a> and accept invitation to join the course.</p>
-
-        </body>
-        </html>`
-
-      const msg = {
-        to: email,
-        subject: `Join ${invite.course.name} ${invite.course.courseNumber}`,
-        text: `Login and accept invitation to join the course. ${ hosturl }/login`,
-        html: htmlEmail,
-      };
-
-      sendGridSend(msg)
-
-    }
-
     const email_arr = args.emails.split("\n")
 
-    email_arr.map(email => (sendInvite(email)))
+    email_arr.map(email => (sendInvite1(email)))
 
     const inviteCourse = await ctx.db.mutation.updateCourse(
       {
@@ -656,6 +656,7 @@ async function mobileLogin(parent, args, ctx, info) {
   }
 
   const valid = await bcrypt.compare(args.password, user.password)
+
   if (!valid) {
     throw new Error('Invalid password')
   }
@@ -707,14 +708,6 @@ async function mobileLogin(parent, args, ctx, info) {
         user: updateUser,
       }
     }
-
-  loginMsg = updateUser.firstName + ' ' + updateUser.lastName + ', you have successfully logged in.'
-
-  return {
-    authMsg: loginMsg,
-    token: jwt.sign({ userId: user.id }, APP_SECRET),
-    user: updateUser,
-  }
 }
 
 async function logout(parent, args, ctx, info) {
@@ -1553,6 +1546,7 @@ async function createQuestion(parent, args, ctx, info) {
   const testStudents = JSON.stringify(test.course.students)
 
   if (testStudents.includes(userId)){
+    console.log('authorized')
   }
   else {
     throw new Error(`Unauthorized, you are not enrolled for this test`)
@@ -1618,6 +1612,7 @@ async function createShortAnswerQuestion(parent, args, ctx, info) {
   const testStudents = JSON.stringify(test.course.students)
 
   if (testStudents.includes(userId)){
+    console.log('authorized')
   }
   else {
     throw new Error(`Unauthorized, you are not enrolled for this test`)
@@ -1936,7 +1931,7 @@ async function addSequence(parent, { testId, studentIds, panelIds }, ctx, info) 
   const sequenceAdded = new Date()
 
   const studentObjs = await studentIds.map(x => ({id: x}));
-  const panelIds = await panelIds.map(x => ({id: x}));
+  const panelIds1 = await panelIds.map(x => ({id: x}));
 
   return ctx.db.mutation.createSequence(
     {
@@ -1949,7 +1944,7 @@ async function addSequence(parent, { testId, studentIds, panelIds }, ctx, info) 
           connect: studentObjs,
         },
         panels: {
-          connect: panelIds
+          connect: panelIds1
         },
       },
     },

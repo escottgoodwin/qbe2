@@ -1,5 +1,5 @@
 # source: https://qbe1-c802843c00.herokuapp.com/database/dev
-# timestamp: Wed May 15 2019 09:48:54 GMT-0700 (Pacific Daylight Time)
+# timestamp: Mon Jun 24 2019 10:13:36 GMT-0700 (Pacific Daylight Time)
 
 type AggregateAnswer {
   count: Int!
@@ -59,7 +59,9 @@ type AggregateUser {
 
 type Answer implements Node {
   id: ID!
-  answer: QuestionChoice!
+  answer: QuestionChoice
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedBy: User!
   addedDate: DateTime
@@ -377,10 +379,12 @@ type AnswerConnection {
 }
 
 input AnswerCreateInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceCreateOneWithoutAnswersInput!
+  answer: QuestionChoiceCreateOneWithoutAnswersInput
   addedBy: UserCreateOneWithoutAnswersInput!
   updatedBy: UserCreateOneWithoutAnswerUpdatesInput
   question: QuestionCreateOneWithoutQuestionAnswersInput!
@@ -419,10 +423,12 @@ input AnswerCreateOneWithoutChallengeInput {
 }
 
 input AnswerCreateWithoutAddedByInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceCreateOneWithoutAnswersInput!
+  answer: QuestionChoiceCreateOneWithoutAnswersInput
   updatedBy: UserCreateOneWithoutAnswerUpdatesInput
   question: QuestionCreateOneWithoutQuestionAnswersInput!
   challenge: ChallengeCreateOneWithoutAnswerInput
@@ -430,10 +436,12 @@ input AnswerCreateWithoutAddedByInput {
 }
 
 input AnswerCreateWithoutAnswerChoicesInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceCreateOneWithoutAnswersInput!
+  answer: QuestionChoiceCreateOneWithoutAnswersInput
   addedBy: UserCreateOneWithoutAnswersInput!
   updatedBy: UserCreateOneWithoutAnswerUpdatesInput
   question: QuestionCreateOneWithoutQuestionAnswersInput!
@@ -441,6 +449,8 @@ input AnswerCreateWithoutAnswerChoicesInput {
 }
 
 input AnswerCreateWithoutAnswerInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
@@ -452,10 +462,12 @@ input AnswerCreateWithoutAnswerInput {
 }
 
 input AnswerCreateWithoutChallengeInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceCreateOneWithoutAnswersInput!
+  answer: QuestionChoiceCreateOneWithoutAnswersInput
   addedBy: UserCreateOneWithoutAnswersInput!
   updatedBy: UserCreateOneWithoutAnswerUpdatesInput
   question: QuestionCreateOneWithoutQuestionAnswersInput!
@@ -463,10 +475,12 @@ input AnswerCreateWithoutChallengeInput {
 }
 
 input AnswerCreateWithoutQuestionInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceCreateOneWithoutAnswersInput!
+  answer: QuestionChoiceCreateOneWithoutAnswersInput
   addedBy: UserCreateOneWithoutAnswersInput!
   updatedBy: UserCreateOneWithoutAnswerUpdatesInput
   challenge: ChallengeCreateOneWithoutAnswerInput
@@ -474,10 +488,12 @@ input AnswerCreateWithoutQuestionInput {
 }
 
 input AnswerCreateWithoutUpdatedByInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceCreateOneWithoutAnswersInput!
+  answer: QuestionChoiceCreateOneWithoutAnswersInput
   addedBy: UserCreateOneWithoutAnswersInput!
   question: QuestionCreateOneWithoutQuestionAnswersInput!
   challenge: ChallengeCreateOneWithoutAnswerInput
@@ -496,6 +512,10 @@ type AnswerEdge {
 enum AnswerOrderByInput {
   id_ASC
   id_DESC
+  answerType_ASC
+  answerType_DESC
+  shortAnswerText_ASC
+  shortAnswerText_DESC
   answerCorrect_ASC
   answerCorrect_DESC
   addedDate_ASC
@@ -510,6 +530,8 @@ enum AnswerOrderByInput {
 
 type AnswerPreviousValues {
   id: ID!
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
@@ -564,6 +586,56 @@ input AnswerScalarWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  answerType: QuestionType
+
+  """All values that are not equal to given value."""
+  answerType_not: QuestionType
+
+  """All values that are contained in given list."""
+  answerType_in: [QuestionType!]
+
+  """All values that are not contained in given list."""
+  answerType_not_in: [QuestionType!]
+  shortAnswerText: String
+
+  """All values that are not equal to given value."""
+  shortAnswerText_not: String
+
+  """All values that are contained in given list."""
+  shortAnswerText_in: [String!]
+
+  """All values that are not contained in given list."""
+  shortAnswerText_not_in: [String!]
+
+  """All values less than the given value."""
+  shortAnswerText_lt: String
+
+  """All values less than or equal the given value."""
+  shortAnswerText_lte: String
+
+  """All values greater than the given value."""
+  shortAnswerText_gt: String
+
+  """All values greater than or equal the given value."""
+  shortAnswerText_gte: String
+
+  """All values containing the given string."""
+  shortAnswerText_contains: String
+
+  """All values not containing the given string."""
+  shortAnswerText_not_contains: String
+
+  """All values starting with the given string."""
+  shortAnswerText_starts_with: String
+
+  """All values not starting with the given string."""
+  shortAnswerText_not_starts_with: String
+
+  """All values ending with the given string."""
+  shortAnswerText_ends_with: String
+
+  """All values not ending with the given string."""
+  shortAnswerText_not_ends_with: String
   answerCorrect: Boolean
 
   """All values that are not equal to given value."""
@@ -654,10 +726,12 @@ input AnswerSubscriptionWhereInput {
 }
 
 input AnswerUpdateInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceUpdateOneRequiredWithoutAnswersInput
+  answer: QuestionChoiceUpdateOneWithoutAnswersInput
   addedBy: UserUpdateOneRequiredWithoutAnswersInput
   updatedBy: UserUpdateOneWithoutAnswerUpdatesInput
   question: QuestionUpdateOneRequiredWithoutQuestionAnswersInput
@@ -666,12 +740,16 @@ input AnswerUpdateInput {
 }
 
 input AnswerUpdateManyDataInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
 }
 
 input AnswerUpdateManyMutationInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
@@ -743,10 +821,12 @@ input AnswerUpdateOneWithoutChallengeInput {
 }
 
 input AnswerUpdateWithoutAddedByDataInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceUpdateOneRequiredWithoutAnswersInput
+  answer: QuestionChoiceUpdateOneWithoutAnswersInput
   updatedBy: UserUpdateOneWithoutAnswerUpdatesInput
   question: QuestionUpdateOneRequiredWithoutQuestionAnswersInput
   challenge: ChallengeUpdateOneWithoutAnswerInput
@@ -754,10 +834,12 @@ input AnswerUpdateWithoutAddedByDataInput {
 }
 
 input AnswerUpdateWithoutAnswerChoicesDataInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceUpdateOneRequiredWithoutAnswersInput
+  answer: QuestionChoiceUpdateOneWithoutAnswersInput
   addedBy: UserUpdateOneRequiredWithoutAnswersInput
   updatedBy: UserUpdateOneWithoutAnswerUpdatesInput
   question: QuestionUpdateOneRequiredWithoutQuestionAnswersInput
@@ -765,6 +847,8 @@ input AnswerUpdateWithoutAnswerChoicesDataInput {
 }
 
 input AnswerUpdateWithoutAnswerDataInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
@@ -776,10 +860,12 @@ input AnswerUpdateWithoutAnswerDataInput {
 }
 
 input AnswerUpdateWithoutChallengeDataInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceUpdateOneRequiredWithoutAnswersInput
+  answer: QuestionChoiceUpdateOneWithoutAnswersInput
   addedBy: UserUpdateOneRequiredWithoutAnswersInput
   updatedBy: UserUpdateOneWithoutAnswerUpdatesInput
   question: QuestionUpdateOneRequiredWithoutQuestionAnswersInput
@@ -787,10 +873,12 @@ input AnswerUpdateWithoutChallengeDataInput {
 }
 
 input AnswerUpdateWithoutQuestionDataInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceUpdateOneRequiredWithoutAnswersInput
+  answer: QuestionChoiceUpdateOneWithoutAnswersInput
   addedBy: UserUpdateOneRequiredWithoutAnswersInput
   updatedBy: UserUpdateOneWithoutAnswerUpdatesInput
   challenge: ChallengeUpdateOneWithoutAnswerInput
@@ -798,10 +886,12 @@ input AnswerUpdateWithoutQuestionDataInput {
 }
 
 input AnswerUpdateWithoutUpdatedByDataInput {
+  answerType: QuestionType
+  shortAnswerText: String
   answerCorrect: Boolean
   addedDate: DateTime
   updateDate: DateTime
-  answer: QuestionChoiceUpdateOneRequiredWithoutAnswersInput
+  answer: QuestionChoiceUpdateOneWithoutAnswersInput
   addedBy: UserUpdateOneRequiredWithoutAnswersInput
   question: QuestionUpdateOneRequiredWithoutQuestionAnswersInput
   challenge: ChallengeUpdateOneWithoutAnswerInput
@@ -911,6 +1001,56 @@ input AnswerWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  answerType: QuestionType
+
+  """All values that are not equal to given value."""
+  answerType_not: QuestionType
+
+  """All values that are contained in given list."""
+  answerType_in: [QuestionType!]
+
+  """All values that are not contained in given list."""
+  answerType_not_in: [QuestionType!]
+  shortAnswerText: String
+
+  """All values that are not equal to given value."""
+  shortAnswerText_not: String
+
+  """All values that are contained in given list."""
+  shortAnswerText_in: [String!]
+
+  """All values that are not contained in given list."""
+  shortAnswerText_not_in: [String!]
+
+  """All values less than the given value."""
+  shortAnswerText_lt: String
+
+  """All values less than or equal the given value."""
+  shortAnswerText_lte: String
+
+  """All values greater than the given value."""
+  shortAnswerText_gt: String
+
+  """All values greater than or equal the given value."""
+  shortAnswerText_gte: String
+
+  """All values containing the given string."""
+  shortAnswerText_contains: String
+
+  """All values not containing the given string."""
+  shortAnswerText_not_contains: String
+
+  """All values starting with the given string."""
+  shortAnswerText_starts_with: String
+
+  """All values not starting with the given string."""
+  shortAnswerText_not_starts_with: String
+
+  """All values ending with the given string."""
+  shortAnswerText_ends_with: String
+
+  """All values not ending with the given string."""
+  shortAnswerText_not_ends_with: String
   answerCorrect: Boolean
 
   """All values that are not equal to given value."""
@@ -6566,6 +6706,7 @@ type Query {
 type Question implements Node {
   id: ID!
   question: String!
+  questionType: QuestionType
   addedBy: User!
   addedDate: DateTime
   questionTime: DateTime
@@ -6577,6 +6718,7 @@ type Question implements Node {
   sentPanel: Panel
   sentDate: DateTime
   test: Test!
+  correctShortAnswer: String
   choices(where: QuestionChoiceWhereInput, orderBy: QuestionChoiceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [QuestionChoice!]
   challenges(where: ChallengeWhereInput, orderBy: ChallengeOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Challenge!]
   questionAnswers(where: AnswerWhereInput, orderBy: AnswerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Answer!]
@@ -6982,9 +7124,11 @@ input QuestionChoiceUpdateOneRequiredWithoutAnswerChoicesInput {
   upsert: QuestionChoiceUpsertWithoutAnswerChoicesInput
 }
 
-input QuestionChoiceUpdateOneRequiredWithoutAnswersInput {
+input QuestionChoiceUpdateOneWithoutAnswersInput {
   create: QuestionChoiceCreateWithoutAnswersInput
   connect: QuestionChoiceWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
   update: QuestionChoiceUpdateWithoutAnswersDataInput
   upsert: QuestionChoiceUpsertWithoutAnswersInput
 }
@@ -7251,11 +7395,13 @@ type QuestionConnection {
 
 input QuestionCreateInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
@@ -7331,11 +7477,13 @@ input QuestionCreateOneWithoutSentPanelInput {
 
 input QuestionCreateWithoutAddedByInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
   sentTo: UserCreateOneWithoutQuestionsSentToInput
@@ -7350,11 +7498,13 @@ input QuestionCreateWithoutAddedByInput {
 
 input QuestionCreateWithoutChallengesInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
@@ -7369,11 +7519,13 @@ input QuestionCreateWithoutChallengesInput {
 
 input QuestionCreateWithoutChoicesInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
@@ -7388,11 +7540,13 @@ input QuestionCreateWithoutChoicesInput {
 
 input QuestionCreateWithoutCorrectResponseInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
@@ -7407,11 +7561,13 @@ input QuestionCreateWithoutCorrectResponseInput {
 
 input QuestionCreateWithoutIncorrectResponseInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
@@ -7426,11 +7582,13 @@ input QuestionCreateWithoutIncorrectResponseInput {
 
 input QuestionCreateWithoutPanelInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   sentTo: UserCreateOneWithoutQuestionsSentToInput
@@ -7445,11 +7603,13 @@ input QuestionCreateWithoutPanelInput {
 
 input QuestionCreateWithoutQuestionAnswersInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
@@ -7464,11 +7624,13 @@ input QuestionCreateWithoutQuestionAnswersInput {
 
 input QuestionCreateWithoutSentPanelInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
@@ -7483,11 +7645,13 @@ input QuestionCreateWithoutSentPanelInput {
 
 input QuestionCreateWithoutSentToInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
@@ -7502,11 +7666,13 @@ input QuestionCreateWithoutSentToInput {
 
 input QuestionCreateWithoutTestInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   updatedBy: UserCreateOneWithoutQuestionUpdatesInput
   panel: PanelCreateOneWithoutQuestionsInput
@@ -7521,11 +7687,13 @@ input QuestionCreateWithoutTestInput {
 
 input QuestionCreateWithoutUpdatedByInput {
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserCreateOneWithoutQuestionsAddedByInput!
   panel: PanelCreateOneWithoutQuestionsInput
   sentTo: UserCreateOneWithoutQuestionsSentToInput
@@ -7552,6 +7720,8 @@ enum QuestionOrderByInput {
   id_DESC
   question_ASC
   question_DESC
+  questionType_ASC
+  questionType_DESC
   addedDate_ASC
   addedDate_DESC
   questionTime_ASC
@@ -7562,6 +7732,8 @@ enum QuestionOrderByInput {
   updateDate_DESC
   sentDate_ASC
   sentDate_DESC
+  correctShortAnswer_ASC
+  correctShortAnswer_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -7571,11 +7743,13 @@ enum QuestionOrderByInput {
 type QuestionPreviousValues {
   id: ID!
   question: String!
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
 }
 
 input QuestionScalarWhereInput {
@@ -7667,6 +7841,16 @@ input QuestionScalarWhereInput {
 
   """All values not ending with the given string."""
   question_not_ends_with: String
+  questionType: QuestionType
+
+  """All values that are not equal to given value."""
+  questionType_not: QuestionType
+
+  """All values that are contained in given list."""
+  questionType_in: [QuestionType!]
+
+  """All values that are not contained in given list."""
+  questionType_not_in: [QuestionType!]
   addedDate: DateTime
 
   """All values that are not equal to given value."""
@@ -7777,6 +7961,46 @@ input QuestionScalarWhereInput {
 
   """All values greater than or equal the given value."""
   sentDate_gte: DateTime
+  correctShortAnswer: String
+
+  """All values that are not equal to given value."""
+  correctShortAnswer_not: String
+
+  """All values that are contained in given list."""
+  correctShortAnswer_in: [String!]
+
+  """All values that are not contained in given list."""
+  correctShortAnswer_not_in: [String!]
+
+  """All values less than the given value."""
+  correctShortAnswer_lt: String
+
+  """All values less than or equal the given value."""
+  correctShortAnswer_lte: String
+
+  """All values greater than the given value."""
+  correctShortAnswer_gt: String
+
+  """All values greater than or equal the given value."""
+  correctShortAnswer_gte: String
+
+  """All values containing the given string."""
+  correctShortAnswer_contains: String
+
+  """All values not containing the given string."""
+  correctShortAnswer_not_contains: String
+
+  """All values starting with the given string."""
+  correctShortAnswer_starts_with: String
+
+  """All values not starting with the given string."""
+  correctShortAnswer_not_starts_with: String
+
+  """All values ending with the given string."""
+  correctShortAnswer_ends_with: String
+
+  """All values not ending with the given string."""
+  correctShortAnswer_not_ends_with: String
 }
 
 type QuestionSubscriptionPayload {
@@ -7818,13 +8042,21 @@ input QuestionSubscriptionWhereInput {
   node: QuestionWhereInput
 }
 
+enum QuestionType {
+  MULTIPLE_CHOICE
+  SHORT_ANSWER
+  TRUE_FALSE
+}
+
 input QuestionUpdateDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -7840,11 +8072,13 @@ input QuestionUpdateDataInput {
 
 input QuestionUpdateInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -7860,11 +8094,13 @@ input QuestionUpdateInput {
 
 input QuestionUpdateManyDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
 }
 
 input QuestionUpdateManyInput {
@@ -7880,11 +8116,13 @@ input QuestionUpdateManyInput {
 
 input QuestionUpdateManyMutationInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
 }
 
 input QuestionUpdateManyWithoutAddedByInput {
@@ -8003,11 +8241,13 @@ input QuestionUpdateOneWithoutSentPanelInput {
 
 input QuestionUpdateWithoutAddedByDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
   sentTo: UserUpdateOneWithoutQuestionsSentToInput
@@ -8022,11 +8262,13 @@ input QuestionUpdateWithoutAddedByDataInput {
 
 input QuestionUpdateWithoutChallengesDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -8041,11 +8283,13 @@ input QuestionUpdateWithoutChallengesDataInput {
 
 input QuestionUpdateWithoutChoicesDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -8060,11 +8304,13 @@ input QuestionUpdateWithoutChoicesDataInput {
 
 input QuestionUpdateWithoutCorrectResponseDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -8079,11 +8325,13 @@ input QuestionUpdateWithoutCorrectResponseDataInput {
 
 input QuestionUpdateWithoutIncorrectResponseDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -8098,11 +8346,13 @@ input QuestionUpdateWithoutIncorrectResponseDataInput {
 
 input QuestionUpdateWithoutPanelDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   sentTo: UserUpdateOneWithoutQuestionsSentToInput
@@ -8117,11 +8367,13 @@ input QuestionUpdateWithoutPanelDataInput {
 
 input QuestionUpdateWithoutQuestionAnswersDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -8136,11 +8388,13 @@ input QuestionUpdateWithoutQuestionAnswersDataInput {
 
 input QuestionUpdateWithoutSentPanelDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -8155,11 +8409,13 @@ input QuestionUpdateWithoutSentPanelDataInput {
 
 input QuestionUpdateWithoutSentToDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -8174,11 +8430,13 @@ input QuestionUpdateWithoutSentToDataInput {
 
 input QuestionUpdateWithoutTestDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   updatedBy: UserUpdateOneWithoutQuestionUpdatesInput
   panel: PanelUpdateOneWithoutQuestionsInput
@@ -8193,11 +8451,13 @@ input QuestionUpdateWithoutTestDataInput {
 
 input QuestionUpdateWithoutUpdatedByDataInput {
   question: String
+  questionType: QuestionType
   addedDate: DateTime
   questionTime: DateTime
   expirationTime: DateTime
   updateDate: DateTime
   sentDate: DateTime
+  correctShortAnswer: String
   addedBy: UserUpdateOneRequiredWithoutQuestionsAddedByInput
   panel: PanelUpdateOneWithoutQuestionsInput
   sentTo: UserUpdateOneWithoutQuestionsSentToInput
@@ -8407,6 +8667,16 @@ input QuestionWhereInput {
 
   """All values not ending with the given string."""
   question_not_ends_with: String
+  questionType: QuestionType
+
+  """All values that are not equal to given value."""
+  questionType_not: QuestionType
+
+  """All values that are contained in given list."""
+  questionType_in: [QuestionType!]
+
+  """All values that are not contained in given list."""
+  questionType_not_in: [QuestionType!]
   addedDate: DateTime
 
   """All values that are not equal to given value."""
@@ -8517,6 +8787,46 @@ input QuestionWhereInput {
 
   """All values greater than or equal the given value."""
   sentDate_gte: DateTime
+  correctShortAnswer: String
+
+  """All values that are not equal to given value."""
+  correctShortAnswer_not: String
+
+  """All values that are contained in given list."""
+  correctShortAnswer_in: [String!]
+
+  """All values that are not contained in given list."""
+  correctShortAnswer_not_in: [String!]
+
+  """All values less than the given value."""
+  correctShortAnswer_lt: String
+
+  """All values less than or equal the given value."""
+  correctShortAnswer_lte: String
+
+  """All values greater than the given value."""
+  correctShortAnswer_gt: String
+
+  """All values greater than or equal the given value."""
+  correctShortAnswer_gte: String
+
+  """All values containing the given string."""
+  correctShortAnswer_contains: String
+
+  """All values not containing the given string."""
+  correctShortAnswer_not_contains: String
+
+  """All values starting with the given string."""
+  correctShortAnswer_starts_with: String
+
+  """All values not starting with the given string."""
+  correctShortAnswer_not_starts_with: String
+
+  """All values ending with the given string."""
+  correctShortAnswer_ends_with: String
+
+  """All values not ending with the given string."""
+  correctShortAnswer_not_ends_with: String
   addedBy: UserWhereInput
   updatedBy: UserWhereInput
   panel: PanelWhereInput

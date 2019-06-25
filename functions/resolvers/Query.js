@@ -684,29 +684,33 @@ async function userAnswers1(parent, args, ctx, info) {
           ]}
       },
       `{
-      id
-      answer{
         id
-        choice
-        correct
-      }
-      answerCorrect
-      question{
-        id
-        question
-        choices{
+        answer{
           id
           choice
           correct
         }
+        shortAnswerText
+        answerCorrect
+        question{
+          id
+          question
+          questionType
+          correctShortAnswer
+          choices{
+            id
+            choice
+            correct
+          }
+        }
+        addedDate
+        addedBy{
+          id
+          firstName
+          lastName
+        }
       }
-      addedDate
-      addedBy{
-        id
-        firstName
-        lastName
-      }
-    }`
+      `
   )
 
   const countSelectionSet = `
