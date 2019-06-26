@@ -297,8 +297,8 @@ async function testStats(parent, args, ctx, info) {
 async function testStats1(parent, args, ctx, info) {
 
       const questions = await ctx.db.query.questions({ where: { test: { id: args.testId } } },`{ id question questionType questionAnswers { id answerCorrect } }`)
-      console.log(questions)
-      const answers = questions.length>0 ? questions.map(q => q.questionAnswers).flat() : []
+
+      const answers = questions.length>0 ? flat(questions.map(q => q.questionAnswers)) : []
       const answersCount = answers.length>0 ? answers.length : 0
       const answersCorrect = answers.length>0 ? answers.filter(q => q.answerCorrect).length : 0
       const percentCorrect = answersCorrect / answersCount>0 ? answersCorrect / answersCount : 0.0
