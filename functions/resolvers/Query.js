@@ -294,6 +294,23 @@ async function testStats(parent, args, ctx, info) {
       }
 }
 
+async function testStats1(parent, args, ctx, info) {
+
+      const questions = await ctx.db.query.questions({ where: { test: { id: args.testId } } },`{ id question questionType questionAnswers { id answerCorrect } }`)
+      console.log(questions)
+      const answers = questions.length>0 ? questions.map(q => q.questionAnswers).flat() : []
+      const answersCount = answers.length>0 ? answers.length : 0
+      const answersCorrect = answers.length>0 ? answers.filter(q => q.answerCorrect).length : 0
+      const percentCorrect = answersCorrect / answersCount>0 ? answersCorrect / answersCount : 0.0
+
+      return {
+        totalQuestions: questions.length,
+        totalAnswers: answersCount,
+        totalCorrect: answersCorrect,
+        percentCorrect
+      }
+}
+
 async function userAnsweredStats(parent, args, ctx, info){
 
     const userId = await getUserId(ctx)
@@ -415,7 +432,7 @@ async function userTestStats(parent, args, ctx, info) {
 async function testQuestionStats(parent, args, ctx, info) {
 
       const questionsAnswers = await ctx.db.query.questions({ where: { test: { id: args.testId } } }, `{ question panel { link } questionAnswers { answerCorrect } }` )
-    
+
       const questionPercents = questionsAnswers.map(question =>
         ({
           question: question.question,
@@ -930,6 +947,7 @@ module.exports = {
   tests,
   test,
   testStats,
+  testStats1,
   userAnsweredStats,
   userQuestionStats,
   userTestStats,

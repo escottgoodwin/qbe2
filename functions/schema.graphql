@@ -32,6 +32,8 @@ type Query {
 
   testStats(testId: ID!): PercentCorrect! @isAuthenticated
 
+  testStats1(testId: ID!): TestPercentCorrect! @isAuthenticated
+
   userAnsweredStats(testId:ID!): PercentCorrect! @isAuthenticated
 
   userQuestionStats(testId:ID!): PercentCorrectUserQuestions! @isAuthenticated
@@ -271,6 +273,13 @@ type PercentCorrect {
   id: ID!
   name: String!
   total: Int!
+  totalCorrect: Int!
+  percentCorrect: Float!
+}
+
+type TestPercentCorrect {
+  totalQuestions: Int!
+  totalAnswers: Int!
   totalCorrect: Int!
   percentCorrect: Float!
 }
