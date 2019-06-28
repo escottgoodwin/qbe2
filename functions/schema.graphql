@@ -179,6 +179,8 @@ type Mutation {
 
   publishTest(testId: ID!, startTime: String!, endTime: String!, endDate: DateTime!, panelId: ID!, question: String!, choice1: String!, choiceCorrect1: Boolean!, choice2: String!, choiceCorrect2: Boolean!, choice3: String!, choiceCorrect3: Boolean!, choice4: String!, choiceCorrect4: Boolean!): Test!
 
+  publishTestShort(testId: ID!, startTime: String!, endTime: String!, endDate: DateTime!, panelId: ID!, question: String!, correctShortAnswer: String!): Test!
+
   editPublishTest(testId: ID!, startTime: String, endTime: String, endDate: DateTime, published:Boolean): Test!
 
   sendQuestion(testId: ID!, questionId: ID!): Question!

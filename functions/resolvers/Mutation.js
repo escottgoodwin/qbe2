@@ -1061,6 +1061,99 @@ async function publishTest(parent, args, ctx, info) {
 
 }
 
+async function publishTestShort(parent, args, ctx, info) {
+  const userId = await getUserId(ctx)
+  const publishDate = new Date()
+  const expirationTime = publishDate
+  expirationTime.setHours(expirationTime.getHours() + 1)
+  const sequenceAddedDate = new Date()
+  const testEndDate = moment(args.testEndDate).format()
+
+  const test = await ctx.db.mutation.updateTest(
+    {
+      data: {
+        published: true,
+        startTime:args.startTime,
+        endTime:args.endTime,
+        endDate:args.endDate,
+        publishDate,
+        updateDate: publishDate,
+        updatedBy: {
+          connect: {
+            id: userId
+          },
+        },
+      },
+      where: {
+        id: args.testId
+    },
+  },
+  `{ id subject testNumber testDate panels { id } course { students { id } } }`
+  )
+    // get all students for a course
+  const studentIds = test.course.students
+  const panelIds = test.panels
+
+  const studentShuffle = shuffleArray(studentIds)
+  const panelShuffle = shuffleArray(panelIds)
+  const studentShuffleIds = studentShuffle.map(student => student.id)
+  const panelShuffleIds = panelShuffle.map(panel => panel.id)
+
+  const sequence =  ctx.db.mutation.createSequence(
+    {
+      data: {
+        sequenceAddedDate,
+        addedBy:{
+          connect: { id: userId  }
+        },
+        startHour: args.startTime,
+        endHour: args.endTime,
+        testEndDate: args.endDate,
+        test: {
+          connect: { id: args.testId }
+        },
+        studs: {set: studentShuffleIds},
+        pans: {set: panelShuffleIds}
+      },
+    },
+    `{ id studs pans }`
+  )
+
+  const sentTo = studentShuffleIds[0]
+  const sentPanel = panelShuffleIds[0]
+
+  const question = await ctx.db.mutation.createQuestion(
+    {
+      data: {
+        sentTo: {
+          connect: { id: sentTo }
+        },
+        sentPanel: {
+          connect: { id: sentPanel }
+        },
+        question: args.question,
+        correctShortAnswer: args.correctShortAnswer,
+        expirationTime:args.expirationTime,
+        addedDate: publishDate,
+        test: {
+          connect: { id: args.testId  }
+        },
+        panel: {
+          connect: { id: args.panelId  }
+        },
+        addedBy: {
+          connect: { id: userId },
+        },
+      },
+    },
+    `{ id question correctShortAnswer test { subject id } panel { id link }  }`
+  )
+
+  return test
+
+}
+
+
 async function editPublishTest(parent, args, ctx, info) {
   const userId = await getUserId(ctx)
   const updateDate = new Date()
