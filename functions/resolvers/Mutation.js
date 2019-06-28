@@ -1146,7 +1146,7 @@ async function publishTestShort(parent, args, ctx, info) {
         },
       },
     },
-    `{ id question correctShortAnswer test { subject id } panel { id link }  }`
+    `{ id }`
   )
 
   return test
